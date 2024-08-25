@@ -10,7 +10,7 @@
 ## 起動方法
 1. 任意のディレクトリにクローンする。
 2. ./clientで、`npm install --no-audit`を実行する。
-   > --no-auditとするのはreact-scriptsの依存関係でトラブルが起きるからのようです。
+   > --no-auditとするのはreact-scriptsの依存関係でトラブルが起きるからのようです。  
    > 参考：https://zenn.dev/appare45/articles/7f667031aab94b
 
 4. ./serverで、`npm install`を実行する。
