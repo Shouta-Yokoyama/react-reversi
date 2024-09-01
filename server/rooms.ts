@@ -9,14 +9,14 @@ import { Room, Rooms, User } from "./types";
 // interface Room {
 //   users: User[];
 //   chats: Chat[];
-// } 
+// }
 // // ルームの情報を保存
 
 const rooms: Rooms = {};
 
 function createRoom(roomName: string): void {
   if (!rooms[roomName]) {
-    rooms[roomName] = { users: [], chats:[] };
+    rooms[roomName] = { users: [], chats: [], boardState: undefined };
   }
 }
 
@@ -31,10 +31,12 @@ function removeUserFromRoom(roomName: string, userId: string): void {
     rooms[roomName].users = rooms[roomName].users.filter(
       (user: User) => user.id !== userId
     );
+    console.log(rooms[roomName].users);
     //ルームのユーザが0になったらルームを消す
-    if(rooms[roomName].users.length === 0){
+    if (rooms[roomName].users.length === 0) {
       delete rooms[roomName];
-    }
+      console.log(rooms);
+    } 
   }
 }
 

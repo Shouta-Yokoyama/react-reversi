@@ -9,12 +9,12 @@ exports.removeUserFromRoom = exports.getRoom = exports.getAllRoom = exports.crea
 // interface Room {
 //   users: User[];
 //   chats: Chat[];
-// } 
+// }
 // // ルームの情報を保存
 const rooms = {};
 function createRoom(roomName) {
     if (!rooms[roomName]) {
-        rooms[roomName] = { users: [], chats: [] };
+        rooms[roomName] = { users: [], chats: [], boardState: undefined };
     }
 }
 exports.createRoom = createRoom;
@@ -27,9 +27,11 @@ exports.addUserToRoom = addUserToRoom;
 function removeUserFromRoom(roomName, userId) {
     if (rooms[roomName]) {
         rooms[roomName].users = rooms[roomName].users.filter((user) => user.id !== userId);
+        console.log(rooms[roomName].users);
         //ルームのユーザが0になったらルームを消す
         if (rooms[roomName].users.length === 0) {
             delete rooms[roomName];
+            console.log(rooms);
         }
     }
 }

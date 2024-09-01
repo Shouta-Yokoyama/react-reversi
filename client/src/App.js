@@ -27,6 +27,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
+const Grid_1 = __importDefault(require("./components/Grid"));
+const BoardContext_1 = require("./contexts/BoardContext");
 const socket_1 = __importDefault(require("./socket"));
 // チャット表示のreactのkey操作用の変数
 let nextChatLogId = 0;
@@ -39,7 +41,21 @@ const App = () => {
     const [isGameStarted, setIsGameStarted] = (0, react_1.useState)(false);
     const [chatText, setChatText] = (0, react_1.useState)("");
     const [chatLog, setChatLog] = (0, react_1.useState)([]);
+    const [gameBoard, setGameBoard] = (0, react_1.useState)([
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, -1, 0, 0, 0],
+        [0, 0, 0, -1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+    ]);
+    const [firstTurnPlayer, setFirstTurnPlayer] = (0, react_1.useState)("");
+    const [myDisk, setMyDisk] = (0, react_1.useState)();
+    const [currentTurnPlayer, setCurrentTurnPlayer] = (0, react_1.useState)();
     // const [me, setMe] = useState<User>({id:"",name:"",isReady:isReady});
+    //接続のセットアップ関係
     (0, react_1.useEffect)(() => {
         // 接続時のイベント処理
         socket_1.default.on("connect", () => {
@@ -58,12 +74,27 @@ const App = () => {
         socket_1.default.on("disconnect", () => {
             console.log("Disconnected from the server");
         });
-        socket_1.default.on("startGame", () => {
+        //ゲームスタートイベント
+        socket_1.default.on("startGame", (firstTurnPlayer) => {
             setIsGameStarted(true);
+            setFirstTurnPlayer(firstTurnPlayer);
+            setCurrentTurnPlayer(firstTurnPlayer);
+            if (userName === firstTurnPlayer) {
+                setMyDisk(1);
+            }
+            else {
+                setMyDisk(-1);
+            }
         });
-        socket_1.default.on("endGame", (userList) => {
+        //ボード変更イベント ＊インターフェースを共通化すべき？
+        socket_1.default.on("changeBoard", (boardState) => {
+            setGameBoard(boardState.board);
+            setCurrentTurnPlayer(boardState.currentTurnPlayer);
+        });
+        //ゲーム終了イベント
+        socket_1.default.on("endGame", (userName) => {
             setIsGameStarted(false);
-            setUsers(userList);
+            setIsReady(false);
         });
         //イベント名に一考の余地あり
         socket_1.default.on("getChat", (userName, chatText) => {
@@ -86,6 +117,16 @@ const App = () => {
             socket_1.default.off("getChat");
         };
     });
+    //////////
+    //各種関数
+    //////////
+    //マスをクリックしたときの処理
+    const handleSquareClick = (event, buttonProps) => {
+        console.log("handleOnClick!", buttonProps);
+        const posX = buttonProps.posX;
+        const posY = buttonProps.posY;
+        socket_1.default.emit("boardClick", roomName, userName, posX, posY);
+    };
     // ルームに参加する処理
     const joinRoom = () => {
         if (roomName && userName) {
@@ -108,6 +149,7 @@ const App = () => {
         setIsReady((prev) => !prev);
         socket_1.default.emit("toggleReady", { roomName, userName });
     };
+    //チャット送信処理
     const sendChatText = () => {
         if (chatText !== "") {
             socket_1.default.emit("sendChatText", { roomName, userName, chatText });
@@ -117,11 +159,19 @@ const App = () => {
         react_1.default.createElement("h1", null, "Chat Prototype"),
         !isJoined ? (react_1.default.createElement("div", null,
             "room name :",
-            react_1.default.createElement("input", { type: "text", value: roomName, onChange: (e) => setRoomName(e.target.value), placeholder: "Enter room name" }),
+            react_1.default.createElement("input", { type: "text", value: roomName, onChange: (e) => setRoomName(n => e.target.value), placeholder: "Enter room name" }),
             "your name :",
-            react_1.default.createElement("input", { type: "text", value: userName, onChange: (e) => setUserName(e.target.value), placeholder: "Enter your name" }),
+            react_1.default.createElement("input", { type: "text", value: userName, onChange: (e) => setUserName(n => e.target.value), placeholder: "Enter your name" }),
             react_1.default.createElement("button", { onClick: joinRoom }, "Join Room"))) : isGameStarted ? (react_1.default.createElement("div", null,
-            react_1.default.createElement("h2", null, "Game is in progress..."))) : (react_1.default.createElement("div", null,
+            react_1.default.createElement("h2", null, "Game is in progress..."),
+            react_1.default.createElement("div", null,
+                currentTurnPlayer,
+                "\u3055\u3093\u306E\u30BF\u30FC\u30F3"),
+            react_1.default.createElement("div", null,
+                "\u3042\u306A\u305F\u306E\u99D2\uFF1A",
+                myDisk === 1 ? ("黒") : ("白")),
+            react_1.default.createElement(BoardContext_1.BoardContext.Provider, { value: { handleClick: handleSquareClick, boardState: gameBoard } },
+                react_1.default.createElement(Grid_1.default, null)))) : (react_1.default.createElement("div", null,
             react_1.default.createElement("p", null,
                 "Joined room: ",
                 roomName),

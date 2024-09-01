@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import Grid from "./components/Grid";
+import { BoardContext } from "./contexts/BoardContext";
 import socket from "./socket";
-
+import { SquareProps } from "./types";
 interface User {
   id: string;
   name: string;
@@ -24,7 +26,22 @@ const App: React.FC = () => {
   const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
   const [chatText, setChatText] = useState<string>("");
   const [chatLog, setChatLog] = useState<ChatLog[]>([]);
+  const [gameBoard, setGameBoard] = useState<number[][]>([
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, -1, 0, 0, 0],
+    [0, 0, 0, -1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+  ]);
+  const [firstTurnPlayer, setFirstTurnPlayer] = useState<string>("");
+  const [myDisk, setMyDisk] = useState<number>();
+  const [currentTurnPlayer, setCurrentTurnPlayer] = useState<string>();
   // const [me, setMe] = useState<User>({id:"",name:"",isReady:isReady});
+
+  //接続のセットアップ関係
   useEffect(() => {
     // 接続時のイベント処理
     socket.on("connect", () => {
@@ -46,13 +63,35 @@ const App: React.FC = () => {
       console.log("Disconnected from the server");
     });
 
-    socket.on("startGame", () => {
+    //ゲームスタートイベント
+    socket.on("startGame", (firstTurnPlayer: string) => {
       setIsGameStarted(true);
+      setFirstTurnPlayer(firstTurnPlayer);
+      setCurrentTurnPlayer(firstTurnPlayer);
+      if (userName === firstTurnPlayer) {
+        setMyDisk(1);
+      } else {
+        setMyDisk(-1);
+      }
     });
 
-    socket.on("endGame", (userList: User[]) => {
+    //ボード変更イベント ＊インターフェースを共通化すべき？
+    socket.on(
+      "changeBoard",
+      (boardState: {
+        board: number[][];
+        firstTurnPlayer: string;
+        secondTurnPlayer: string;
+        currentTurnPlayer: string;
+      }) => {
+        setGameBoard(boardState.board);
+        setCurrentTurnPlayer(boardState.currentTurnPlayer);
+      }
+    );
+    //ゲーム終了イベント
+    socket.on("endGame", (userName:string) => {
       setIsGameStarted(false);
-      setUsers(userList);
+      setIsReady(false);
     });
 
     //イベント名に一考の余地あり
@@ -77,6 +116,20 @@ const App: React.FC = () => {
       socket.off("getChat");
     };
   });
+  //////////
+  //各種関数
+  //////////
+
+  //マスをクリックしたときの処理
+  const handleSquareClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    buttonProps: SquareProps
+  ) => {
+    console.log("handleOnClick!",buttonProps);
+    const posX = buttonProps.posX;
+    const posY = buttonProps.posY;
+    socket.emit("boardClick", roomName,userName,posX,posY);
+  };
 
   // ルームに参加する処理
   const joinRoom = () => {
@@ -103,6 +156,7 @@ const App: React.FC = () => {
     socket.emit("toggleReady", { roomName, userName });
   };
 
+  //チャット送信処理
   const sendChatText = () => {
     if (chatText !== "") {
       socket.emit("sendChatText", { roomName, userName, chatText });
@@ -118,14 +172,14 @@ const App: React.FC = () => {
           <input
             type="text"
             value={roomName}
-            onChange={(e) => setRoomName(e.target.value)}
+            onChange={(e) => setRoomName(n => e.target.value)}
             placeholder="Enter room name"
           />
           your name :
           <input
             type="text"
             value={userName}
-            onChange={(e) => setUserName(e.target.value)}
+            onChange={(e) => setUserName(n => e.target.value)}
             placeholder="Enter your name"
           />
           <button onClick={joinRoom}>Join Room</button>
@@ -133,6 +187,13 @@ const App: React.FC = () => {
       ) : isGameStarted ? (
         <div>
           <h2>Game is in progress...</h2>
+          <div>{currentTurnPlayer}さんのターン</div>
+          <div>あなたの駒：{myDisk === 1 ? ("黒") : ("白") }</div>
+          <BoardContext.Provider
+            value={{ handleClick: handleSquareClick, boardState: gameBoard }}
+          >
+            <Grid />
+          </BoardContext.Provider>
         </div>
       ) : (
         <div>
