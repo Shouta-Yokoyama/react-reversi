@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
                 user.isReady = !user.isReady;
                 io.to(roomName).emit("updateUsers", room.users);
                 const allReady = room.users.every((user) => user.isReady);
-                if (allReady) {
+                if (allReady && room.users.length !== 1) {
                     //ゲーム開始の記述
                     const firstTurnPlayer = room.users[Math.floor(Math.random() * 2)].name;
                     const secondTurnPlayer = room.users.filter((user) => user.name !== firstTurnPlayer)[0].name;
@@ -99,7 +99,7 @@ io.on("connection", (socket) => {
     });
     //ボードクリックしたときイベント
     socket.on("boardClick", (roomName, userName, posX, posY) => {
-        console.log(`getBoardClick! roomName:${roomName} userName:${userName} posX:${posX} posY:${posY}`);
+        //console.log(`getBoardClick! roomName:${roomName} userName:${userName} posX:${posX} posY:${posY}`);
         const room = (0, rooms_1.getRoom)(roomName);
         if (room && room.boardState) {
             //イベント主がcurrentTurnPlayerなら処理、そうでなければ一切処理しない
@@ -140,20 +140,20 @@ io.on("connection", (socket) => {
                         blackCount === 0 ||
                         whiteCount === 0) {
                         //isReadyを初期化してupdateUsersを配信
-                        room.users.map((user) => user.isReady = false);
+                        room.users.map((user) => (user.isReady = false));
                         io.to(roomName).emit("updateUsers", room.users);
                         //endGameイベントに勝者の名前をつけて配信、メッセージも配信
                         if (blackCount > whiteCount) {
                             io.to(roomName).emit("endGame", room.boardState.firstTurnPlayer);
-                            io.to(roomName).emit("getChat", "System", `${room.boardState.firstTurnPlayer}さんの勝利！`);
+                            io.to(roomName).emit("getChat", "System", `黒${blackCount}枚 vs 白${whiteCount}枚で、${room.boardState.firstTurnPlayer}さんの勝利！`);
                         }
                         else if (blackCount < whiteCount) {
                             io.to(roomName).emit("endGame", room.boardState.secondTurnPlayer);
-                            io.to(roomName).emit("getChat", "System", `${room.boardState.secondTurnPlayer}さんの勝利！`);
+                            io.to(roomName).emit("getChat", "System", `黒${blackCount}枚 vs 白${whiteCount}枚で、${room.boardState.secondTurnPlayer}さんの勝利！`);
                         }
                         else {
-                            io.to(roomName).emit("endGame", "");
-                            io.to(roomName).emit("getChat", "System", `引き分け！`);
+                            io.to(roomName).emit("endGame", room.boardState.secondTurnPlayer);
+                            io.to(roomName).emit("getChat", "System", `黒${blackCount}枚 vs 白${whiteCount}枚で、引き分け！`);
                         }
                     }
                     if (room.boardState.board)
