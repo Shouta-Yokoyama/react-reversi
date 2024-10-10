@@ -8,7 +8,7 @@ const StyledGridRow = styled.div`
   max-height: 800px;
 `;
 
-const Board: React.FC = () => {
+const Grid: React.FC = () => {
     const boardInitData: SquareProps[][] = [];
     const context = useContext(BoardContext);
 
@@ -48,4 +48,4 @@ const Board: React.FC = () => {
     return <div>{boardInitData.map((x,i) => generateGridRow(x,i))}</div>;
 };
 
-export default Board;
+export default Grid;
