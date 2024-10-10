@@ -5,16 +5,7 @@ import { BoardContext } from "../contexts/BoardContext";
 import { SquareProps } from "../types";
 // モックコンテキストのセットアップ
 const mockContext = {
-  boardState: [
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, -1, 0, 0, 0],
-    [0, 0, 0, -1, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-  ],
+  boardState: Array(8).fill(Array(8).fill(0)),
   handleClick: jest.fn(),
 };
 
