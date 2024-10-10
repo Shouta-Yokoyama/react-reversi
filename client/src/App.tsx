@@ -89,7 +89,7 @@ const App: React.FC = () => {
       }
     );
     //ゲーム終了イベント
-    socket.on("endGame", (userName:string) => {
+    socket.on("endGame", (userName: string) => {
       setIsGameStarted(false);
       setIsReady(false);
     });
@@ -125,10 +125,10 @@ const App: React.FC = () => {
     event: React.MouseEvent<HTMLButtonElement>,
     buttonProps: SquareProps
   ) => {
-    console.log("handleOnClick!",buttonProps);
+    console.log("handleOnClick!", buttonProps);
     const posX = buttonProps.posX;
     const posY = buttonProps.posY;
-    socket.emit("boardClick", roomName,userName,posX,posY);
+    socket.emit("boardClick", roomName, userName, posX, posY);
   };
 
   // ルームに参加する処理
@@ -164,31 +164,40 @@ const App: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Chat Prototype</h1>
+    <div className="bg-[#282c34] text-white">
+      <h1 className="text-5xl">Chat Prototype</h1>
       {!isJoined ? (
         <div>
-          room name :
-          <input
-            type="text"
-            value={roomName}
-            onChange={(e) => setRoomName(n => e.target.value)}
-            placeholder="Enter room name"
-          />
-          your name :
-          <input
-            type="text"
-            value={userName}
-            onChange={(e) => setUserName(n => e.target.value)}
-            placeholder="Enter your name"
-          />
-          <button onClick={joinRoom}>Join Room</button>
+          <p className="text-3xl px-4 py-2">
+            room name :
+            <input
+              type="text"
+              value={roomName}
+              onChange={(e) => setRoomName((n) => e.target.value)}
+              placeholder="Enter room name"
+            />
+          </p>
+          <p className="text-3xl px-4 py-2">
+            room name :
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName((n) => e.target.value)}
+              placeholder="Enter your name"
+            />
+          </p>
+          <button
+            onClick={joinRoom}
+            className="bg-gray-800 hover:bg-gray-700 text-white rounded px-4 py-2"
+          >
+            Join Room
+          </button>
         </div>
       ) : isGameStarted ? (
         <div>
           <h2>Game is in progress...</h2>
           <div>{currentTurnPlayer}さんのターン</div>
-          <div>あなたの駒：{myDisk === 1 ? ("黒") : ("白") }</div>
+          <div>あなたの駒：{myDisk === 1 ? "黒" : "白"}</div>
           <BoardContext.Provider
             value={{ handleClick: handleSquareClick, boardState: gameBoard }}
           >

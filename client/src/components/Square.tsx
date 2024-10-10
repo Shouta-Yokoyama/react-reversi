@@ -1,42 +1,6 @@
 import React, { useContext } from "react";
-import styled from "styled-components";
 import { BoardContext } from "../contexts/BoardContext";
 import { SquareProps } from "../types";
-
-const StyledSquare = styled.button`
-  width: 12%;
-  font-size: 25px;
-  aspect-ratio: 1;
-  justify-items: center;
-  align-content: center;
-  background-color: green;
-  color: #000;
-  border: 1px solid #000000;
-  float: left;
-`;
-
-//二つ用意していて美しくない
-const StyledCircleBlack = styled.p`
-  width: 80px;
-  height: 80px;
-  margin-top: auto;
-  margin-bottom: auto;
-  margin-left: -2px;
-  border-radius: 50%;
-  border: 3px solid #000000;
-  background: #000;
-`;
-
-const StyledCircleWhite = styled.p`
-  width: 80px;
-  height: 80px;
-  margin-top: auto;
-  margin-bottom: auto;
-  margin-left: -2px;
-  border-radius: 50%;
-  border: 3px solid #000000;
-  background: #fff;
-`;
 
 const Square: React.FC<SquareProps> = (props) => {
   const context = useContext(BoardContext);
@@ -45,12 +9,25 @@ const Square: React.FC<SquareProps> = (props) => {
   }
 
   return (
-    <>
-      <StyledSquare onClick={(event) => context.handleClick(event, props )}>
-        {props.state === 1 && <StyledCircleBlack />}
-        {props.state === -1 && <StyledCircleWhite />}
-      </StyledSquare>
-    </>
+    <button
+      className="w-[12%] text-2xl aspect-square bg-green-500 text-black border border-black float-left"
+      onClick={(event) => context.handleClick(event, props)}
+      data-testid="square-button"
+    >
+      {props.state === 1 && (
+        <div
+          className="w-20 h-20 m-auto rounded-full border-3 border-black bg-black"
+          data-testid="circle-black"
+        />
+      )}
+      {props.state === -1 && (
+        <div
+          className="w-20 h-20 m-auto rounded-full border-3 border-black bg-white"
+          data-testid="circle-white"
+        />
+      )}
+    </button>
   );
 };
+
 export default Square;
