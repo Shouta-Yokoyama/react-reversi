@@ -27,14 +27,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
-const styled_components_1 = __importDefault(require("styled-components"));
 const BoardContext_1 = require("../contexts/BoardContext");
 const Square_1 = __importDefault(require("./Square"));
-const StyledGridRow = styled_components_1.default.div `
-  max-width: 800px;
-  max-height: 800px;
-`;
-const Board = () => {
+const Grid = () => {
     const boardInitData = [];
     const context = (0, react_1.useContext)(BoardContext_1.BoardContext);
     if (!context) {
@@ -54,7 +49,7 @@ const Board = () => {
         }
         boardInitData.push(dataList);
     }
-    const generateGridRow = (x, index) => (react_1.default.createElement(StyledGridRow, { key: index },
+    const generateGridRow = (x, index) => (react_1.default.createElement("div", { key: index, className: "max-w-[800px] max-h-[800px] flex" },
         react_1.default.createElement(Square_1.default, Object.assign({}, x[0])),
         react_1.default.createElement(Square_1.default, Object.assign({}, x[1])),
         react_1.default.createElement(Square_1.default, Object.assign({}, x[2])),
@@ -65,4 +60,4 @@ const Board = () => {
         react_1.default.createElement(Square_1.default, Object.assign({}, x[7]))));
     return react_1.default.createElement("div", null, boardInitData.map((x, i) => generateGridRow(x, i)));
 };
-exports.default = Board;
+exports.default = Grid;
