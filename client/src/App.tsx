@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Grid from "./components/Grid";
+import InputBox from "./components/InputBox";
 import { BoardContext } from "./contexts/BoardContext";
 import socket from "./socket";
 import { SquareProps } from "./types";
@@ -165,27 +166,25 @@ const App: React.FC = () => {
 
   return (
     <div className="bg-[#282c34] text-white">
-      <h1 className="text-5xl">Chat Prototype</h1>
+      <h1 className="text-5xl p-6">Chat Prototype</h1>
       {!isJoined ? (
-        <div>
-          <p className="text-3xl px-4 py-2">
-            room name :
-            <input
-              type="text"
-              value={roomName}
-              onChange={(e) => setRoomName((n) => e.target.value)}
-              placeholder="Enter room name"
-            />
-          </p>
-          <p className="text-3xl px-4 py-2">
-            room name :
-            <input
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName((n) => e.target.value)}
-              placeholder="Enter your name"
-            />
-          </p>
+        <div className="flex">
+            <label className="text-3xl px-4 py-2">
+              room name :
+              <InputBox
+                state={roomName}
+                setFn={setRoomName}
+                placeholder={"Enter room name"}
+              />
+            </label>
+            <label className="text-3xl px-4 py-2">
+              user name :
+              <InputBox
+                state={userName}
+                setFn={setUserName}
+                placeholder={"Enter your name"}
+              />
+            </label>
           <button
             onClick={joinRoom}
             className="bg-gray-800 hover:bg-gray-700 text-white rounded px-4 py-2"
@@ -217,11 +216,10 @@ const App: React.FC = () => {
             ))}
           </ul>
           <h2>Chat</h2>
-          <input
-            type="text"
-            value={chatText}
-            onChange={(e) => setChatText(e.target.value)}
-            placeholder="Enter your chat"
+          <InputBox
+            state={chatText}
+            setFn={setChatText}
+            placeholder={"Enter your chat"}
           />
           <button onClick={sendChatText}>send</button>
           <button onClick={toggleReady}>

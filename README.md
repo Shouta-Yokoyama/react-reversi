@@ -3,9 +3,11 @@
 ![Static Badge](https://img.shields.io/badge/react-000000?style=for-the-badge&logo=react&logoColor=blue)
 ![Static Badge](https://img.shields.io/badge/typescript-000000?style=for-the-badge&logo=typescript&logoColor=blue)
 ![Static Badge](https://img.shields.io/badge/nodejs-000000?style=for-the-badge&logo=node.js&logoColor=green)
+![Static Badge](https://img.shields.io/badge/tailwind-css?style=for-the-badge&logo=tailwind-css&color=black)
 ## 概要
 リバーシが遊べるウェブアプリです。個人的なwebアプリ製作の勉強として作成されています。
 ## 更新履歴
+- 2024/10/11 tailwind cssを導入
 - 2024/09/14 試合終了時に枚数を通知する機能を追加
 - 2024/09/02 リバーシ機能を実装  
   準備完了ボタンが、対戦画面に移行した後、「canselReady」の表記から戻らないバグを修正
@@ -18,8 +20,9 @@
    > 参考：https://zenn.dev/appare45/articles/7f667031aab94b
 
 4. ./serverで、`npm install`を実行する。
-5. ./serverで、`node index.js`を実行しサーバを起動する。
-6. ./clientで、`npm start`を実行しクライアントを起動する。
+5. 依存関係でエラーが発生するので、./serverで `npm audit -fix`を実行する。
+6. ./serverで、`node index.js`を実行しサーバを起動する。
+7. ./clientで、`npm start`を実行しクライアントを起動する。
 ### プレイ方法
 1. room nameとyour nameを入力しJoin Roomをクリックします。
 2. Enter your chatとあるテキストボックスの右にあるReadyとあるボタンをクリックします。

@@ -28,6 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
 const Grid_1 = __importDefault(require("./components/Grid"));
+const InputBox_1 = __importDefault(require("./components/InputBox"));
 const BoardContext_1 = require("./contexts/BoardContext");
 const socket_1 = __importDefault(require("./socket"));
 // チャット表示のreactのkey操作用の変数
@@ -156,14 +157,14 @@ const App = () => {
         }
     };
     return (react_1.default.createElement("div", { className: "bg-[#282c34] text-white" },
-        react_1.default.createElement("h1", { className: "text-5xl" }, "Chat Prototype"),
-        !isJoined ? (react_1.default.createElement("div", null,
-            react_1.default.createElement("p", { className: "text-3xl px-4 py-2" },
+        react_1.default.createElement("h1", { className: "text-5xl p-6" }, "Chat Prototype"),
+        !isJoined ? (react_1.default.createElement("div", { className: "flex" },
+            react_1.default.createElement("label", { className: "text-3xl px-4 py-2" },
                 "room name :",
-                react_1.default.createElement("input", { type: "text", value: roomName, onChange: (e) => setRoomName((n) => e.target.value), placeholder: "Enter room name" })),
-            react_1.default.createElement("p", { className: "text-3xl px-4 py-2" },
-                "room name :",
-                react_1.default.createElement("input", { type: "text", value: userName, onChange: (e) => setUserName((n) => e.target.value), placeholder: "Enter your name" })),
+                react_1.default.createElement(InputBox_1.default, { state: roomName, setFn: setRoomName, placeholder: "Enter room name" })),
+            react_1.default.createElement("label", { className: "text-3xl px-4 py-2" },
+                "user name :",
+                react_1.default.createElement(InputBox_1.default, { state: userName, setFn: setUserName, placeholder: "Enter your name" })),
             react_1.default.createElement("button", { onClick: joinRoom, className: "bg-gray-800 hover:bg-gray-700 text-white rounded px-4 py-2" }, "Join Room"))) : isGameStarted ? (react_1.default.createElement("div", null,
             react_1.default.createElement("h2", null, "Game is in progress..."),
             react_1.default.createElement("div", null,
@@ -185,7 +186,7 @@ const App = () => {
                 " ",
                 user.isReady ? "(Ready)" : "(Not Ready)")))),
             react_1.default.createElement("h2", null, "Chat"),
-            react_1.default.createElement("input", { type: "text", value: chatText, onChange: (e) => setChatText(e.target.value), placeholder: "Enter your chat" }),
+            react_1.default.createElement(InputBox_1.default, { state: chatText, setFn: setChatText, placeholder: "Enter your chat" }),
             react_1.default.createElement("button", { onClick: sendChatText }, "send"),
             react_1.default.createElement("button", { onClick: toggleReady }, isReady ? "Cancel Ready" : "Ready"),
             react_1.default.createElement("ul", null, chatLog.map((log) => (react_1.default.createElement("li", { key: log.id },
