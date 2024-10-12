@@ -49,7 +49,7 @@ const Grid = () => {
         }
         boardInitData.push(dataList);
     }
-    const generateGridRow = (x, index) => (react_1.default.createElement("div", { key: index, className: "max-w-[800px] max-h-[800px] flex" },
+    const generateGridRow = (x, index) => (react_1.default.createElement("div", { role: "row", key: index, className: "max-w-[800px] max-h-[800px] flex" },
         react_1.default.createElement(Square_1.default, Object.assign({}, x[0])),
         react_1.default.createElement(Square_1.default, Object.assign({}, x[1])),
         react_1.default.createElement(Square_1.default, Object.assign({}, x[2])),
@@ -58,6 +58,6 @@ const Grid = () => {
         react_1.default.createElement(Square_1.default, Object.assign({}, x[5])),
         react_1.default.createElement(Square_1.default, Object.assign({}, x[6])),
         react_1.default.createElement(Square_1.default, Object.assign({}, x[7]))));
-    return react_1.default.createElement("div", null, boardInitData.map((x, i) => generateGridRow(x, i)));
+    return react_1.default.createElement("div", { role: "table" }, boardInitData.map((x, i) => generateGridRow(x, i)));
 };
 exports.default = Grid;
