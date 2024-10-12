@@ -3,7 +3,7 @@ import React from "react";
 import Square from "../components/Square";
 import { BoardContext } from "../contexts/BoardContext";
 import { SquareProps } from "../types";
-// モックコンテキストのセットアップ
+
 const mockContext = {
   boardState: Array(8).fill(Array(8).fill(0)),
   handleClick: jest.fn(),
@@ -19,7 +19,7 @@ const renderSquare = (props: SquareProps) => {
 
 describe("Square Component", () => {
   afterEach(() => {
-    jest.clearAllMocks(); // モック関数のリセット
+    jest.clearAllMocks();
   });
 
   it("renders a black circle when state is 1", () => {
@@ -48,14 +48,12 @@ describe("Square Component", () => {
   it("calls context handleClick on button click", () => {
     renderSquare({ posX: 1, posY: 1, state: 0, key: 0 });
 
-    // ボタンクリック時にhandleClickが呼ばれることを確認
-    const button = screen.getByTestId("square-button"); // buttonをdata-testidで取得
+    const button = screen.getByTestId("square-button");
     fireEvent.click(button);
     expect(mockContext.handleClick).toHaveBeenCalled();
   });
 
   it("throws an error if used outside of BoardContext", () => {
-    // コンテキストプロバイダがない場合にエラーが投げられることを確認
     const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     expect(() => render(<Square state={0} posX={0} posY={0} key={0} />)).toThrow(
       "BoardContext must be used within a Context.Provider"
