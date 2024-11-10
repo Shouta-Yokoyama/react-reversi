@@ -27,7 +27,11 @@ const Grid: React.FC = () => {
   }
 
   const generateGridRow = (x: SquareProps[], index: number) => (
-    <div role={"row"} key={index} className="max-w-[800px] max-h-[800px] flex">
+    <div
+      role={"row"}
+      key={index}
+      className="max-w-[800px] max-h-[800px] flex"
+    >
       <Square {...x[0]} />
       <Square {...x[1]} />
       <Square {...x[2]} />
@@ -39,7 +43,11 @@ const Grid: React.FC = () => {
     </div>
   );
 
-  return <div role={"table"}>{boardInitData.map((x, i) => generateGridRow(x, i))}</div>;
+  return (
+    <div role={"table"} className="p-4 bg-gray-900 rounded-lg">
+      {boardInitData.map((x, i) => generateGridRow(x, i))}
+    </div>
+  );
 };
 
 export default Grid;

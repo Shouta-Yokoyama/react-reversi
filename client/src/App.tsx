@@ -165,11 +165,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#282c34] text-white">
-      <h1 className="text-5xl p-6">Chat Prototype</h1>
+    <div className="min-h-screen p-6 dark:bg-gray-900 dark:text-gray-100">
+      <h1 className="text-5xl p-6 text-center font-bold">Chat Prototype</h1>
       {!isJoined ? (
-        <div className="flex">
-            <label className="text-3xl px-4 py-2">
+        <div className="flex flex-col space-y-4">
+            <label className="text-2xl">
               room name :
               <InputBox
                 state={roomName}
@@ -177,7 +177,7 @@ const App: React.FC = () => {
                 placeholder={"Enter room name"}
               />
             </label>
-            <label className="text-3xl px-4 py-2">
+            <label className="text-2xl">
               user name :
               <InputBox
                 state={userName}
@@ -187,14 +187,14 @@ const App: React.FC = () => {
             </label>
           <button
             onClick={joinRoom}
-            className="bg-gray-800 hover:bg-gray-700 text-white rounded px-4 py-2"
+            className="bg-blue-600 hover:bg-blue-500 text-white font-bold rounded px-4 py-2 dark:bg-gray-700 dark:hover:bg-gray-600"
           >
             Join Room
           </button>
         </div>
       ) : isGameStarted ? (
         <div>
-          <h2>Game is in progress...</h2>
+          <h2 className="text-2xl mb-2">Game is in progress...</h2>
           <div>{currentTurnPlayer}さんのターン</div>
           <div>あなたの駒：{myDisk === 1 ? "黒" : "白"}</div>
           <BoardContext.Provider
@@ -204,30 +204,30 @@ const App: React.FC = () => {
           </BoardContext.Provider>
         </div>
       ) : (
-        <div>
-          <p>Joined room: {roomName}</p>
-          <button onClick={leaveRoom}>Leave Room</button>{" "}
-          <h2>Users in Room:</h2>
-          <ul>
+        <div className="space-y-4">
+          <p className="text-lg">Joined room: {roomName}</p>
+          <button onClick={leaveRoom} className="bg-red-500 text-white px-4 py-2 rounded">Leave Room</button>
+          <h2 className="text-xl font-semibold">Users in Room:</h2>
+          <ul className="space-y-2">
             {users.map((user) => (
-              <li key={user.id}>
+              <li key={user.id} className="dark:bg-gray-800 p-2 rounded">
                 {user.name} {user.isReady ? "(Ready)" : "(Not Ready)"}
               </li>
             ))}
           </ul>
-          <h2>Chat</h2>
+          <h2 className="text-xl font-semibold">Chat</h2>
           <InputBox
             state={chatText}
             setFn={setChatText}
             placeholder={"Enter your chat"}
           />
-          <button onClick={sendChatText}>send</button>
-          <button onClick={toggleReady}>
+          <button onClick={sendChatText} className="bg-green-500 text-white px-4 py-2 rounded">send</button>
+          <button onClick={toggleReady} className="bg-yellow-500 text-white px-4 py-2 rounded">
             {isReady ? "Cancel Ready" : "Ready"}
           </button>
-          <ul>
+          <ul className="space-y-2 mt-4">
             {chatLog.map((log) => (
-              <li key={log.id}>
+              <li key={log.id} className="dark:bg-gray-800 p-2 rounded">
                 {log.userName} : {log.chatText}
               </li>
             ))}
