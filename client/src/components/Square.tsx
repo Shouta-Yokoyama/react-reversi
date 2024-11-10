@@ -10,7 +10,7 @@ const Square: React.FC<SquareProps> = (props) => {
 
   return (
     <button
-      className="w-[12%] text-2xl aspect-square bg-green-500 text-black border border-black float-left"
+      className="w-[12%] text-2xl aspect-square bg-green-600 text-black border border-black float-left"
       onClick={(event) => context.handleClick(event, props)}
       data-testid="square-button"
     >

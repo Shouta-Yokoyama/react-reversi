@@ -165,38 +165,46 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 dark:bg-gray-900 dark:text-gray-100">
-      <h1 className="text-5xl p-6 text-center font-bold">Chat Prototype</h1>
+    <div className="min-h-screen p-6 bg-gradient-to-b from-indigo-700 via-purple-800 to-black dark:text-gray-100">
+      <h1 className="text-5xl p-6 text-center font-bold drop-shadow-lg">
+        Reversi game
+      </h1>
       {!isJoined ? (
-        <div className="flex flex-col space-y-4">
-            <label className="text-2xl">
-              room name :
-              <InputBox
-                state={roomName}
-                setFn={setRoomName}
-                placeholder={"Enter room name"}
-              />
-            </label>
-            <label className="text-2xl">
-              user name :
-              <InputBox
-                state={userName}
-                setFn={setUserName}
-                placeholder={"Enter your name"}
-              />
-            </label>
+        <div className="flex flex-col space-y-6">
+          <label className="text-2xl">
+            room name :
+            <InputBox
+              state={roomName}
+              setFn={setRoomName}
+              placeholder={"Enter room name"}
+            />
+          </label>
+          <label className="text-2xl">
+            user name :
+            <InputBox
+              state={userName}
+              setFn={setUserName}
+              placeholder={"Enter your name"}
+            />
+          </label>
           <button
             onClick={joinRoom}
-            className="bg-blue-600 hover:bg-blue-500 text-white font-bold rounded px-4 py-2 dark:bg-gray-700 dark:hover:bg-gray-600"
+            className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105"
           >
             Join Room
           </button>
         </div>
       ) : isGameStarted ? (
         <div>
-          <h2 className="text-2xl mb-2">Game is in progress...</h2>
-          <div>{currentTurnPlayer}さんのターン</div>
-          <div>あなたの駒：{myDisk === 1 ? "黒" : "白"}</div>
+          <h2 className="text-3xl mb-4 font-semibold text-center">
+            Game is in progress...
+          </h2>
+          <div className={`text-center text-xl py-4 rounded-lg shadow-md ${currentTurnPlayer === userName ? "bg-green-500":"bg-orange-500"}`}>
+            {currentTurnPlayer}さんのターン
+          </div>
+          <div className="text-center mb-6">
+            あなたの駒：{myDisk === 1 ? "黒" : "白"}
+          </div>
           <BoardContext.Provider
             value={{ handleClick: handleSquareClick, boardState: gameBoard }}
           >
@@ -204,34 +212,67 @@ const App: React.FC = () => {
           </BoardContext.Provider>
         </div>
       ) : (
-        <div className="space-y-4">
-          <p className="text-lg">Joined room: {roomName}</p>
-          <button onClick={leaveRoom} className="bg-red-500 text-white px-4 py-2 rounded">Leave Room</button>
-          <h2 className="text-xl font-semibold">Users in Room:</h2>
-          <ul className="space-y-2">
-            {users.map((user) => (
-              <li key={user.id} className="dark:bg-gray-800 p-2 rounded">
-                {user.name} {user.isReady ? "(Ready)" : "(Not Ready)"}
-              </li>
-            ))}
-          </ul>
-          <h2 className="text-xl font-semibold">Chat</h2>
-          <InputBox
-            state={chatText}
-            setFn={setChatText}
-            placeholder={"Enter your chat"}
-          />
-          <button onClick={sendChatText} className="bg-green-500 text-white px-4 py-2 rounded">send</button>
-          <button onClick={toggleReady} className="bg-yellow-500 text-white px-4 py-2 rounded">
-            {isReady ? "Cancel Ready" : "Ready"}
+        <div className="space-y-6 text-center">
+          <p className="text-xl">Joined room: {roomName}</p>
+          <button
+            onClick={leaveRoom}
+            className="bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105"
+          >
+            Leave Room
           </button>
-          <ul className="space-y-2 mt-4">
-            {chatLog.map((log) => (
-              <li key={log.id} className="dark:bg-gray-800 p-2 rounded">
-                {log.userName} : {log.chatText}
-              </li>
-            ))}
-          </ul>
+          <div className="mt-4">
+            <h3 className="text-2xl">Users in Room:</h3>
+            <ul className="mt-4 space-y-3">
+              {users.map((user) => (
+                <li
+                  key={user.id}
+                  className={`p-3 rounded-lg shadow-md ${
+                    user.isReady ? "bg-green-600" : "bg-gray-700"
+                  }`}
+                >
+                  {user.name} {user.isReady ? "(Ready)" : "(Not Ready)"}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <button
+              onClick={toggleReady} // isReady状態を切り替え
+              className={`${
+                isReady
+                  ? "bg-green-600 hover:bg-green-500"
+                  : "bg-gray-600 hover:bg-gray-500"
+              }
+                 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105`}
+            >
+              {isReady ? "Cancel Ready" : "Ready"}
+            </button>
+          </div>
+          <div>
+            <h3 className="text-2xl">Chat</h3>
+            <InputBox
+              state={chatText}
+              setFn={setChatText}
+              placeholder={"Enter your chat"}
+            />
+            <button
+              onClick={sendChatText}
+              className="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-lg transition-transform transform hover:scale-105"
+            >
+              send
+            </button>
+            <ul className="space-y-2 mt-4">
+              {chatLog.map((log) => (
+                <li
+                  key={log.id}
+                  className="dark:bg-gray-800 p-3 rounded-md shadow-md"
+                >
+                  <span className="font-semibold">{log.userName}</span>:{" "}
+                  {log.chatText}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
     </div>

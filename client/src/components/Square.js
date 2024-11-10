@@ -30,7 +30,7 @@ const Square = (props) => {
     if (!context) {
         throw new Error("BoardContext must be used within a Context.Provider");
     }
-    return (react_1.default.createElement("button", { className: "w-[12%] text-2xl aspect-square bg-green-500 text-black border border-black float-left", onClick: (event) => context.handleClick(event, props), "data-testid": "square-button" },
+    return (react_1.default.createElement("button", { className: "w-[12%] text-2xl aspect-square bg-green-600 text-black border border-black float-left", onClick: (event) => context.handleClick(event, props), "data-testid": "square-button" },
         props.state === 1 && (react_1.default.createElement("div", { className: "w-20 h-20 m-auto rounded-full border-3 border-black bg-black", "data-testid": "circle-black" })),
         props.state === -1 && (react_1.default.createElement("div", { className: "w-20 h-20 m-auto rounded-full border-3 border-black bg-white", "data-testid": "circle-white" }))));
 };
