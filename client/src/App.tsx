@@ -170,6 +170,7 @@ const App: React.FC = () => {
         Reversi game
       </h1>
       {!isJoined ? (
+        /*部屋を選択する画面*/
         <div className="flex flex-col space-y-6">
           <label className="text-2xl">
             room name :
@@ -195,9 +196,10 @@ const App: React.FC = () => {
           </button>
         </div>
       ) : isGameStarted ? (
+        /*ゲーム中の画面*/
         <div>
           <h2 className="text-3xl mb-4 font-semibold text-center">
-            Game is in progress...
+            対戦中……
           </h2>
           <div className={`text-center text-xl py-4 rounded-lg shadow-md ${currentTurnPlayer === userName ? "bg-green-500":"bg-orange-500"}`}>
             {currentTurnPlayer}さんのターン
@@ -212,6 +214,7 @@ const App: React.FC = () => {
           </BoardContext.Provider>
         </div>
       ) : (
+        /*ゲーム前の画面*/
         <div className="space-y-6 text-center">
           <p className="text-xl">Joined room: {roomName}</p>
           <button

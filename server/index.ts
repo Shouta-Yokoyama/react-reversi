@@ -40,7 +40,7 @@ io.on("connection", (socket: Socket) => {
     const user: User = { id: socket.id, name: userName, isReady: false };
     addUserToRoom(roomName, user);
 
-    // socket.io機能のroomにroomNameで登録　＊多重登録になってるかも？
+    // socket.io機能のroomにroomNameで登録
     socket.join(roomName);
 
     console.log(`User ${userName} (ID: ${socket.id}) joined room: ${roomName}`);
